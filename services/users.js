@@ -18,9 +18,13 @@ class Users {
     return user;
   }
 
-  async get(id) {
-    const user = await UserModel.findById(id);
-    /* filtra las cosas que devuelve como el password y updatedAt, cual es la diferencia de user._doc con user */
+  async get(query, which) {
+    console.log(query, which);
+    const user = which
+      ? await UserModel.findById(query)
+      : await UserModel.findOne({ username: query });
+    /* filtra las cosas que devuelve como el password y updatedAt, user._doc son donde se encuentra los datos del usuario */
+
     const { password, updatedAt, ...other } = user._doc;
     return other;
   }

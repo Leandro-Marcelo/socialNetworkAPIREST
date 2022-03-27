@@ -52,10 +52,18 @@ function users(app) {
   });
 
   /* No tendría que ser un get, tendría que ser un post porque estoy enviando un json */
-  router.get("/timeline/all", async (req, res) => {
+  router.get("/timeline/:userId", async (req, res) => {
     /* le envio mi id */
-    const response = await postsService.timeline(req.body);
+    const response = await postsService.timeline(req.params.userId);
+    return res.status(200).json(response);
+  });
+
+  /* obtener todos los posts del usuario, pero solo los del usuario esto es para el profile del usuario en el front */
+  router.get("/profile/:username", async (req, res) => {
+    /* le envio mi id */
+    const response = await postsService.timelineProfile(req.params.username);
     return res.status(200).json(response);
   });
 }
+
 module.exports = users;

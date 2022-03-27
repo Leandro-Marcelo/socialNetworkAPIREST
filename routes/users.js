@@ -8,9 +8,13 @@ function users(app) {
   const usersService = new Users();
   app.use("/api/users", router);
 
-  router.get("/:id", async (req, res) => {
-    const { id } = req.params;
-    const user = await usersService.get(id);
+  /* Ahora paso de obtener un usuario a través de una query */
+  router.get("/", async (req, res) => {
+    const { username } = req.query;
+    const { userId } = req.query;
+    const user = userId
+      ? await usersService.get(userId, true)
+      : await usersService.get(username, false);
     return res.status(200).json(user);
   });
 

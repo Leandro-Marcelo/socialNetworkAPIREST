@@ -50,8 +50,8 @@ class Posts {
     return post;
   }
 
-  async timeline(data) {
-    const currentUser = await UserModel.findById(data.userId);
+  async timeline(userId) {
+    const currentUser = await UserModel.findById(userId);
     const userPosts = await PostModel.find({ userId: currentUser._id });
     const friendPosts = await Promise.all(
       currentUser.followings.map((friendId) => {
@@ -59,6 +59,13 @@ class Posts {
       })
     );
     return userPosts.concat(...friendPosts);
+  }
+
+  async timelineProfile(username) {
+    /* {username:username} */
+    const user = await UserModel.findOne({ username });
+    const posts = await PostModel.find({ userId: user._id });
+    return posts;
   }
 }
 
