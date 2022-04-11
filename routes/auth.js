@@ -8,7 +8,7 @@ function users(app) {
   const authService = new Auth();
   const usersService = new Users();
   /* despues devolverle el api auth */
-  app.use("/auth", router);
+  app.use("/api/auth", router);
 
   /*   router.post("/signup", async (req, res) => {
     const user = req.body;
@@ -35,7 +35,7 @@ function users(app) {
     const response = await authService.login(email, password);
 
     if (!response.success) {
-      return res.json(response);
+      return res.status(200).json(response);
     }
     const user = await usersService.get(response.data.username, false);
     return res
@@ -46,6 +46,7 @@ function users(app) {
         /* Aquí pone none porque en frontend estamos en el puerto 5500 y en el backend 3000, es decir, el domain / dominio no es el mismo */
         /* sameSite: "none", */
       }) /* lo pasamos a response.data porque no queremos devolver el token */
+      .status(200)
       .json({ success: response.success, user });
   });
   router.post("/signup", async (req, res) => {

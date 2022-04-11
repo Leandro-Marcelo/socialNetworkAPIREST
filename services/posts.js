@@ -31,10 +31,10 @@ class Posts {
     }
   }
 
-  async likeDisLike(id, data) {
-    /* si intenta dar like a un post que no existe, rompe todo */
+  /* si intenta dar like a un post que no existe, rompe todo */
+  /* data: userId, id: postId */
+  async likeDislike(data, id) {
     const post = await PostModel.findById(id);
-    console.log(post);
     if (!post.likes.includes(data.userId)) {
       await post.updateOne({ $push: { likes: data.userId } });
       return { success: true, message: "The post has been liked" };
@@ -45,11 +45,17 @@ class Posts {
   }
 
   async get(id) {
-    /* si le paso un id que no existe, me devuelve null */
-    const post = await PostModel.findById(id);
-    return post;
+    /* si le paso un id que no existe, el catch lo atrapa */
+    try {
+      const post = await PostModel.findById(id);
+      return post;
+    } catch (error) {
+      console.log(`Handle error:`, error);
+    }
   }
 
+  /* Get your posts and your friends' posts */
+  /* friends / followings */
   async timeline(userId) {
     const currentUser = await UserModel.findById(userId);
     const userPosts = await PostModel.find({ userId: currentUser._id });
@@ -61,8 +67,8 @@ class Posts {
     return userPosts.concat(...friendPosts);
   }
 
+  /* Get only your posts */
   async timelineProfile(username) {
-    /* {username:username} */
     const user = await UserModel.findOne({ username });
     const posts = await PostModel.find({ userId: user._id });
     return posts;

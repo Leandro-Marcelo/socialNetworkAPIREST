@@ -4,6 +4,8 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const cors = require("cors");
 const cookies = require("cookie-parser");
+const multer = require("multer");
+const path = require("path");
 
 /* Algo sumamente importante es que si eliminamos un usuario, deberían eliminarse sus posts */
 
@@ -20,7 +22,7 @@ const posts = require("./routes/posts");
 const app = express();
 
 /* ****** Usando middleware globales ****** */
-
+app.use("/images", express.static(path.join(__dirname, "public/images")));
 app.use(express.json());
 app.use(helmet());
 app.use(morgan("common"));
@@ -32,6 +34,25 @@ app.use(
   })
 );
 app.use(cookies());
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, req.body.name);
+  },
+});
+
+const upload = multer({ storage });
+app.post("/api/upload", upload.single("file"), (req, res) => {
+  try {
+    return res.status(200).json("File uploaded successfully");
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 /* ******* Utilizando los routers ******* */
 auth(app);
 users(app);

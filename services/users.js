@@ -18,15 +18,54 @@ class Users {
     return user;
   }
 
+  async getByUserId(userId) {
+    const user = await UserModel.findById(userId);
+    return user;
+  }
+
+  /* Get a user by his id or username */
   async get(query, which) {
     console.log(query, which);
     const user = which
       ? await UserModel.findById(query)
       : await UserModel.findOne({ username: query });
     /* filtra las cosas que devuelve como el password y updatedAt, user._doc son donde se encuentra los datos del usuario */
-
     const { password, updatedAt, ...other } = user._doc;
+    console.log(`esto devuelve`, other._id);
     return other;
+  }
+
+  /* Gets all users excluding the parameter username */
+  /* update the name, no puede ser getAll */
+  /* En SQL sería SELECT * FROM users WHERE username != ${username} */
+  async getAll(username) {
+    try {
+      const users = await UserModel.find();
+      let usersList = [];
+      users.map((user) => {
+        const { _id, username, profilePicture } = user;
+        usersList.push({ _id, username, profilePicture });
+      });
+      const response = usersList.filter(
+        (userList) => userList.username !== username
+      );
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  /* Get the data of the followings of a certain user */
+  /* trae los datos de las personas que sigue cierto [usuario] */
+  /* userFollowings tendría que ser el nombre técnico? */
+  async usernameFriend(userId) {
+    const user = await UserModel.findById(userId);
+    const friends = await Promise.all(
+      user.followings.map((friendId) => {
+        return this.getByUserId(friendId);
+      })
+    );
+    return friends;
   }
 
   async create(data) {
@@ -44,6 +83,7 @@ class Users {
     } else {
       return { success: false, message: "You can update only your account!" };
     }
+    // {new:true} is to return me the new data
     const user = await UserModel.findByIdAndUpdate(id, data, { new: true });
     return { success: true, message: "Account has been updated" };
   }
@@ -58,7 +98,9 @@ class Users {
     }
   }
 
-  async follow(id, data) {
+  /* yo creo que tendría que ser así */
+  /* data: follower data, id: following id */
+  async follow(data, id) {
     if (data.userId !== id) {
       const user = await UserModel.findById(id);
       const currentUser = await UserModel.findById(data.userId);
@@ -76,7 +118,8 @@ class Users {
     }
   }
 
-  async unfollow(id, data) {
+  /* data: current user, id: user */
+  async unfollow(data, id) {
     if (data.userId !== id) {
       const user = await UserModel.findById(id);
       const currentUser = await UserModel.findById(data.userId);

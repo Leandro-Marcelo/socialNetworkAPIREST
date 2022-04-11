@@ -39,8 +39,7 @@ function users(app) {
 
   router.put("/:id/like", async (req, res) => {
     const { id } = req.params;
-    /* le envio el id del post que quiero likear/deslikear y mi id */
-    const response = await postsService.likeDisLike(id, req.body);
+    const response = await postsService.likeDislike(req.body, id);
     return res.status(200).json(response);
   });
 
@@ -53,6 +52,7 @@ function users(app) {
 
   /* No tendría que ser un get, tendría que ser un post porque estoy enviando un json */
   router.get("/timeline/:userId", async (req, res) => {
+    console.log(req.params);
     /* le envio mi id */
     const response = await postsService.timeline(req.params.userId);
     return res.status(200).json(response);
