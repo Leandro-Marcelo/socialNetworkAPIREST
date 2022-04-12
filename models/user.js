@@ -3,63 +3,57 @@ const { mongoose } = require("../config/db");
 const { Schema } = mongoose;
 
 const userSchema = new Schema(
-  {
-    username: {
-      type: String,
-      require: true,
-      min: 3,
-      max: 20,
-      unique: true,
+    {
+        name: {
+            type: String,
+        },
+        email: {
+            type: String,
+            max: 50,
+        },
+        password: {
+            type: String,
+        },
+        img: {
+            type: String,
+            default: "",
+        },
+        coverPicture: {
+            type: String,
+            default: "",
+        },
+        followers: {
+            type: Array,
+            default: [],
+        },
+        followings: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "users",
+            },
+        ],
+        isAdmin: {
+            type: Boolean,
+            default: false,
+        },
+        desc: {
+            type: String,
+            default: "",
+        },
+        city: {
+            type: String,
+        },
+        from: {
+            type: String,
+        },
+        fileKey: String,
+        /*   relationship: {
+            type: Number,
+            enum: [1, 2, 3],
+        }, */
+        role: Number,
     },
-    email: {
-      type: String,
-      required: true,
-      max: 50,
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: true,
-      min: 6,
-    },
-    profilePicture: {
-      type: String,
-      default: "",
-    },
-    coverPicture: {
-      type: String,
-      default: "",
-    },
-    followers: {
-      type: Array,
-      default: [],
-    },
-    followings: {
-      type: Array,
-      default: [],
-    },
-    isAdmin: {
-      type: Boolean,
-      default: false,
-    },
-    desc: {
-      type: String,
-      max: 50,
-    },
-    city: {
-      type: String,
-      max: 50,
-    },
-    from: {
-      type: String,
-      max: 50,
-    },
-    relationship: {
-      type: Number,
-      enum: [1, 2, 3],
-    },
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
 const UserModel = mongoose.model("users", userSchema);
