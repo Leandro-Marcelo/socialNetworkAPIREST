@@ -25,8 +25,8 @@ function auth(app) {
     }); */
 
     router.post("/signup", upload.single("img"), async (req, res) => {
-        console.log(req.body);
-        console.log(req.file);
+        /* console.log(req.body);
+        console.log(req.file); */
         const response = await authService.signup(req.body, req.file);
 
         return tokenToCookie(res, response);

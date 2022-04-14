@@ -1,5 +1,5 @@
 const express = require("express");
-const { port } = require("./config");
+const config = require("./config");
 /* const helmet = require("helmet");
 const morgan = require("morgan"); */
 const cors = require("cors");
@@ -41,6 +41,12 @@ files(app);
 posts(app);
 users(app);
 
-app.listen(port, () => {
-    console.log("Servidor: http://localhost:" + port);
+app.get("/", (req, res) => {
+    res.status(200).send(
+        "Hola, Soy Leandro Marcelo y este es mi API REST de mi Social Network"
+    );
+});
+
+app.listen(config.port, () => {
+    /*  console.log("Servidor: http://localhost:" + port); */
 });

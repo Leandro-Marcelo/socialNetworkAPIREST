@@ -28,10 +28,10 @@ class Users {
         /* console.log(query, which); */
         let user;
         if (which) {
-            console.log(`Busco por userId`);
+            /* console.log(`Busco por userId`); */
             user = await UserModel.findById(query);
         } else {
-            console.log(`Busco por name`);
+            /*   console.log(`Busco por name`); */
             user = await UserModel.findOne({ name: query });
         }
         /* filtra las cosas que devuelve como el password y updatedAt, user._doc son donde se encuentra los datos del usuario */

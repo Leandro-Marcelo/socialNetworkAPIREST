@@ -105,7 +105,7 @@ class Posts {
                 );
             })
         );
-        console.log(userPosts);
+        /*     console.log(userPosts); */
         return userPosts.concat(...friendPosts);
     }
 

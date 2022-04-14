@@ -1,5 +1,5 @@
 function tokenToCookie(res, data) {
-    console.log(data);
+    /*  console.log(data); */
     if (data.success) {
         let date = new Date(new Date().setDate(new Date().getDate() + 7));
         return res
